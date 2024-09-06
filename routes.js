@@ -3,6 +3,7 @@ const { insertItem,  getPelis, getPelisT } = require('./db')
 
 const router = express.Router()
 
+// Lo que se solicita de la carpeta public, se envía directamente
 router.get('/public',(req,res) => {
   res.sendFile(__dirname + "/public");
 })

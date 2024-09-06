@@ -1,3 +1,8 @@
+p {
+    font-size: 13px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #242640;
+}
 
 input{
     border: none;
@@ -40,9 +45,12 @@ input[type="submit"]:hover {
 }
 
 h2 {
-    font-family: 'Verdana', cursive;
+    font-family: 'Amatic SC';font-size: 22px;
+    color: #242640;
+    font-size: 30px;
 }
 
 body {
-    background-color: #cccccc;
+    background: rgb(238,174,202);
+    background: linear-gradient(180deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }

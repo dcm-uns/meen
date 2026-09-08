@@ -1,38 +1,68 @@
-const { MongoClient, ObjectId } = require('mongodb')
+/**
+ * @fileoverview Inicialización de conexión a MongoDB
+ * Este módulo gestiona la conexión inicial a la base de datos MongoDB.
+ * La configuración se centraliza en config.js
+ * Las operaciones CRUD se encuentran en services/movieService.js
+ */
 
-const connectionUrl = 'mongodb://127.0.0.1:27017'
-const dbName = 'peliculas'
+const { MongoClient } = require('mongodb')
+const config = require('./config')
+const movieService = require('./services/movieService')
 
-let db
+let client
 
-// Incializa la conexión a la base de datos
-const init = () =>
-  MongoClient.connect(connectionUrl, { useNewUrlParser: true }).then((client) => {
-    db = client.db(dbName)
-  })
-
-// Inserta ciegamente un item en la colección 'movies'
-const insertItem = (item) => {
-  const collection = db.collection('movies')
-  return collection.insertOne(item)
+/**
+ * Inicializa la conexión a MongoDB
+ * Lee la configuración desde config.js (que a su vez lee variables de entorno)
+ * Luego inicializa el servicio de películas con la referencia a la BD
+ * 
+ * @returns {Promise<void>}
+ * @throws {Error} Si no puede conectar a MongoDB
+ * 
+ * @example
+ * init()
+ *   .then(() => console.log('Conectado a MongoDB'))
+ *   .catch(err => console.error('Error de conexión:', err))
+ */
+const init = async () => {
+  try {
+    client = await MongoClient.connect(
+      config.mongo.connectionUrl,
+      config.mongoOptions
+    )
+    
+    const db = client.db(config.mongo.dbName)
+    
+    // Inicializar el servicio de películas con la conexión
+    movieService.setDatabase(db)
+    
+    console.log(`Conectado a MongoDB: ${config.mongo.dbName}`)
+  } catch (error) {
+    console.error('Error al conectar a MongoDB:', error)
+    throw error
+  }
 }
 
-// Obtiene las películas de acuerdo a un criterio
-// (aqui hardcodeado, pero debería ser lo que está en el formulario)
-const getPelis = () => {
-  // hardcodeado: peliculas con "Toy" en el titulo
-  const filter = {
-   'title':{$regex: /Toy/}
-  };
-  const projection = {
-    'title': 1, 
-    '_id': 0
-  };
-  const coll = db.collection('movies');
-  const cursor = coll.find(filter, { projection });
-  const result = cursor.toArray();
-  return result;
+/**
+ * Cierra la conexión a MongoDB de forma limpia
+ * Llamar esto al apagar el servidor
+ * 
+ * @returns {Promise<void>}
+ */
+const closeConnection = async () => {
+  if (client) {
+    await client.close()
+    console.log('Conexión a MongoDB cerrada')
+  }
 }
 
+// Re-exportar funciones del servicio para mantener compatibilidad
+const insertItem = movieService.addMovie
+const getPelis = movieService.searchMovies
 
-module.exports = { init, insertItem, getPelis }
+module.exports = {
+  init,
+  closeConnection,
+  insertItem,
+  getPelis
+}

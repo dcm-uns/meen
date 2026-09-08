@@ -1,24 +1,120 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 
 <head>
-    <title>Muviserch</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muviserch - Buscador de Películas</title>
     <link href='https://fonts.googleapis.com/css?family=Amatic SC' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="main">
-        <h2>Muviserch TADWeb</h2>
-        <input type="text" placeholder="Buscar por título" />
-        <button id="buttonBuscar">Buscar</button>
-        <div id="resultados">
-             <!-- Aqui se mostraran los resultados -->   
-        </div>
+        <!-- Encabezado -->
+        <h1>🎬 Muviserch TADWeb</h1>
+        <p class="subtitle">Buscador de películas con base de datos MongoDB</p>
 
+        <!-- Sección de búsqueda -->
+        <section class="search-section">
+            <h2>Buscar Películas</h2>
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="inputBuscar"
+                    placeholder="Ej: Avatar, Toy Story, Inception..."
+                    class="search-input"
+                >
+                <button id="buttonBuscar" class="btn btn-primary">Buscar</button>
+            </div>
+            
+            <!-- Elemento para mostrar estado de búsqueda -->
+            <div id="status"></div>
+            
+            <!-- Resultados de búsqueda -->
+            <div id="resultados" class="resultados-container">
+                <!-- Aquí se mostrarán los resultados de la búsqueda -->
+            </div>
+        </section>
+
+        <!-- Sección de agregación de películas -->
+        <section class="add-section">
+            <h2>Agregar Nueva Película</h2>
+            <button id="buttonToggleForm" class="btn btn-secondary">Mostrar Formulario</button>
+            
+            <div id="agregarPelicula" class="form-container" style="display: none;">
+                <h3>Completa los datos de la película</h3>
+                <form class="movie-form">
+                    <div class="form-group">
+                        <label for="inputTitle">Título:</label>
+                        <input 
+                            type="text" 
+                            id="inputTitle"
+                            placeholder="Nombre de la película"
+                            class="form-input"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPlot">Sinopsis:</label>
+                        <textarea 
+                            id="inputPlot"
+                            placeholder="Describe brevemente la película"
+                            class="form-textarea"
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputYear">Año de Lanzamiento:</label>
+                        <input 
+                            type="number" 
+                            id="inputYear"
+                            placeholder="Ej: 2020"
+                            class="form-input"
+                            min="1"
+                        >
+                    </div>
+
+                    <button type="button" id="buttonAgregar" class="btn btn-success">Agregar Película</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Información adicional -->
+        <footer class="info-section">
+            <h3>ℹ️ Información</h3>
+            <p>
+                <strong>Nota para estudiantes:</strong> ¿Por qué la búsqueda siempre devuelve películas con "Toy" 
+                en el título, sin importar lo que escribas? 
+                Esto es intencional. Busca en el código backend dónde está el filtro hardcodeado y corrígelo.
+            </p>
+            <p>
+                <strong>Estructura de la aplicación:</strong>
+                <ul>
+                    <li>Backend: Express.js + MongoDB</li>
+                    <li>Frontend: HTML5 + JavaScript vanilla + CSS</li>
+                    <li>API: Endpoints GET /peliculas (búsqueda) y POST /peliculas (agregar)</li>
+                </ul>
+            </p>
+        </footer>
     </div>
 
-</body>
+    <!-- Script que gestiona los eventos del frontend -->
+    <script src="clicks.js"></script>
 
-<script src="clicks.js"></script>
+    <!-- Script adicional para toggle del formulario -->
+    <script>
+        const buttonToggleForm = document.getElementById('buttonToggleForm')
+        const formContainer = document.getElementById('agregarPelicula')
+        
+        if (buttonToggleForm && formContainer) {
+            buttonToggleForm.addEventListener('click', function() {
+                const isHidden = formContainer.style.display === 'none'
+                formContainer.style.display = isHidden ? 'block' : 'none'
+                buttonToggleForm.textContent = isHidden ? 'Ocultar Formulario' : 'Mostrar Formulario'
+            })
+        }
+    </script>
+</body>
 
 </html>
